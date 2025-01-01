@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Typography, Container } from '@mui/material';
-import { ApiData, CredentialsTypes } from './sharedInterfaces/sharedInterfaces';
+import { ApiData, CredentialsTypes } from '../sharedInterfaces/sharedInterfaces';
 
 interface PropsType {
     idOfSelectedCard?: number | string
@@ -18,7 +18,12 @@ const DeleteCard: React.FC<PropsType> = (props): React.ReactElement => {
 
     if (selectedCredentials[0]) {
         return (
-            <Container sx={{ marginTop: 5, padding: 5, background: "red" }}>
+            <Container sx={{ 
+                marginTop: 5,
+                padding: 5,
+                background: "red",
+                maxWidth: 350
+                }}>
 
                 <Typography>
                     Haluatko varmasti tuhota tunnuksen, palveluun:

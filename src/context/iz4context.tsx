@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { ApiData, CredentialsTypes, FetchSettings, UserPswChangeData } from '../components/sharedInterfaces/sharedInterfaces';
+import { ApiData, CredentialsTypes, FetchSettings, UserPswChangeData } from '../sharedInterfaces/sharedInterfaces';
+import useIsMobile from '../customHooks/useIsMobile';
 
 export const Iz4Context: React.Context<any> = createContext(undefined);
 
@@ -17,6 +18,7 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
     error: "",
     fetchReady: true
   });
+  const isMobile: boolean = useIsMobile();
   // Change this to match 'prod' or 'dev' depending, what you need
   const modeOfUse: String = 'dev';
 
@@ -177,7 +179,8 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
       apiData, setApiData,
       apiCall,
       modeOfUse,
-      logUserOut
+      logUserOut,
+      isMobile
     }}>
       {props.children}
     </Iz4Context.Provider>

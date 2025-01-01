@@ -1,6 +1,6 @@
 import React, { useRef, useState, SetStateAction, Dispatch } from 'react';
 import { Stack, Dialog, DialogTitle, DialogContent, TextField, Button } from '@mui/material';
-import { CredentialsTypes } from './sharedInterfaces/sharedInterfaces';
+import { CredentialsTypes } from '../sharedInterfaces/sharedInterfaces';
 
 interface PropsTypesPostNew {
   dialogOpen: boolean

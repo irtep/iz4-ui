@@ -4,7 +4,7 @@ import KeyIcon from '@mui/icons-material/Key';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { CredentialsTypes } from './sharedInterfaces/sharedInterfaces';
+import { CredentialsTypes } from '../sharedInterfaces/sharedInterfaces';
 
 interface PropsType {
     credentials: Array<CredentialsTypes>
@@ -33,7 +33,7 @@ const ShowCard: React.FC<PropsType> = (props): React.ReactElement => {
     }
 
     useEffect(() => {
-        // always when changed, copied password to clipboard
+        // always when props are changed, copy password to clipboard
         if (msg === '' && creds) {
             copyToClipboard(creds.password, 'salasana');
         }
