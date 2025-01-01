@@ -108,7 +108,10 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
         let errorText: string = "";
 
         switch (connection.status) {
-          case 401: errorText = "Ei lupaa tietoihin / toimenpiteeseen."; break;
+          case 401: 
+            errorText = "Ei lupaa tietoihin / toimenpiteeseen."; 
+            logUserOut();
+            break;
           case 400: errorText = "Virhe pyynnön tiedoissa"; break;
           default: errorText = "Palvelimella tapahtui odottamaton virhe"; break;
         }
@@ -135,8 +138,18 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
     }
   }
 
-  useEffect(() => {
+  const logUserOut = () => {
+    setUsername('');
+    setToken('');
+    localStorage.setItem("uDetails", '');
+    setApiData({
+      ...apiData,
+      allCredentials: [],
+      fetchReady: true
+    });
+  }
 
+  useEffect(() => {
     // logs in, if user did not logged out
     const loggedUserJSON = window.localStorage.getItem('uDetails');
 
@@ -150,7 +163,6 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
   }, []);
 
   useEffect(() => {
-
     if (username) {
       apiCall();
     }
@@ -164,7 +176,8 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
       message, setMessage,
       apiData, setApiData,
       apiCall,
-      modeOfUse
+      modeOfUse,
+      logUserOut
     }}>
       {props.children}
     </Iz4Context.Provider>

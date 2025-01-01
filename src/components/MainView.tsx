@@ -17,14 +17,12 @@ const MainView: React.FC = (): React.ReactElement => {
 
   const {
     username, 
-    setUsername,
-    apiData, 
-    setApiData,
-    setToken, 
+    apiData,
     setDialogOpen,
     message, 
     dialogOpen,
-    apiCall
+    apiCall,
+    logUserOut
   } = useContext(Iz4Context);
 
   const navigate = useNavigate();
@@ -76,14 +74,7 @@ const MainView: React.FC = (): React.ReactElement => {
               variant="contained"
               size="small"
               onClick={() => {
-                setUsername('');
-                setToken('');
-                localStorage.setItem("uDetails", '');
-                setApiData({
-                  ...apiData,
-                  allCredentials: [],
-                  fetchReady: true
-                });
+                logUserOut()
               }}>
               Kirjaudu ulos
             </Button>
@@ -138,6 +129,7 @@ const MainView: React.FC = (): React.ReactElement => {
                         id: cred.id,
                         action: 'show'
                       });
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                   >
                     <VisibilityIcon />
@@ -151,6 +143,7 @@ const MainView: React.FC = (): React.ReactElement => {
                         id: cred.id,
                         action: 'edit'
                       });
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                   >
                     <EditIcon />
@@ -164,6 +157,7 @@ const MainView: React.FC = (): React.ReactElement => {
                         id: cred.id,
                         action: 'delete'
                       });
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                   >
                     <DeleteIcon />
