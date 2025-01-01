@@ -1,12 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { Alert, Backdrop, Button, CircularProgress, IconButton, Container, ListItem, ListItemText, Typography, Grid } from '@mui/material';
+import { Alert, Backdrop, CircularProgress, IconButton, Container, ListItem, ListItemText, Grid } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
-import { useNavigate } from 'react-router-dom';
 import PostNew from './PostNew';
 import CardActions from './CardActions';
-import { CredentialsTypes, SelectedProps } from './sharedInterfaces/sharedInterfaces';
+import { CredentialsTypes, SelectedProps } from '../sharedInterfaces/sharedInterfaces';
 import { Iz4Context } from '../context/iz4context';
 
 const MainView: React.FC = (): React.ReactElement => {
@@ -16,98 +15,18 @@ const MainView: React.FC = (): React.ReactElement => {
   })
 
   const {
-    username, 
     apiData,
     setDialogOpen,
-    message, 
     dialogOpen,
     apiCall,
-    logUserOut
+    isMobile
   } = useContext(Iz4Context);
-
-  const navigate = useNavigate();
 
   return (
     <Container>
 
-      {/* Buttons, while not logged in: */}
-
-      {(username === '') ?
-        <>
-          <Button
-            sx={{ 
-              margin: 1,
-              background: "rgb(0,0,80)",
-              color: "white"            
-            }}
-            variant="contained"
-            size="small"
-            onClick={() => {
-              navigate('/login');
-            }}>
-            Kirjaudu sisään
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            sx={{
-              background: "darkgreen",
-              color: "white"
-            }}
-            onClick={() => {
-              navigate('/register');
-            }}>
-            Rekisteröidy
-          </Button>
-        </> :
-
-        /* Buttons, while logged in */
-
-        <Grid container spacing={1}>
-
-          <Grid item lg={1}>
-            <Typography>Moi, {username}</Typography>
-          </Grid>
-
-          <Grid item lg={2}>
-            <Button
-              variant="contained"
-              size="small"
-              onClick={() => {
-                logUserOut()
-              }}>
-              Kirjaudu ulos
-            </Button>
-          </Grid>
-
-          <Grid item lg={4}>
-            <Button
-              onClick={() => { setDialogOpen(true) }}
-              variant="outlined">
-              Tallenna uudet tunnisteet
-            </Button>
-          </Grid>
-
-          <Grid item lg={4}>
-            <Button
-              onClick={() => { navigate("/settings") }}
-              variant="outlined"
-              color="secondary">
-              Omat asetukset
-            </Button>
-          </Grid>
-
-        </Grid>
-      }
-
-      { // if message, show it here:
-        (message !== '') ?
-          <Alert severity="error">{message}</Alert> :
-          <></>
-      }
-
-
       {/* Show all credentials here */}
+
       {(Boolean(apiData.error))
         ? <Alert severity="error">{apiData.error}</Alert>
         : (apiData.fetchReady)
@@ -129,7 +48,9 @@ const MainView: React.FC = (): React.ReactElement => {
                         id: cred.id,
                         action: 'show'
                       });
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      (isMobile)
+                        ? window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+                        : window.scrollTo({ top: 0, behavior: 'smooth' })
                     }}
                   >
                     <VisibilityIcon />
@@ -143,7 +64,10 @@ const MainView: React.FC = (): React.ReactElement => {
                         id: cred.id,
                         action: 'edit'
                       });
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      console.log('edit click');
+                      (isMobile)
+                        ? window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+                        : window.scrollTo({ top: 0, behavior: 'smooth' })
                     }}
                   >
                     <EditIcon />
@@ -157,7 +81,9 @@ const MainView: React.FC = (): React.ReactElement => {
                         id: cred.id,
                         action: 'delete'
                       });
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      (isMobile)
+                        ? window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+                        : window.scrollTo({ top: 0, behavior: 'smooth' })
                     }}
                   >
                     <DeleteIcon />

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Typography, Container } from '@mui/material';
-import { CredentialsTypes, ApiData, SelectedProps } from './sharedInterfaces/sharedInterfaces';
+import { Container } from '@mui/material';
+import { CredentialsTypes, ApiData, SelectedProps } from '../sharedInterfaces/sharedInterfaces';
 import ShowCard from './ShowCard';
 import EditCard from './EditCard';
 import DeleteCard from './DeleteCard';

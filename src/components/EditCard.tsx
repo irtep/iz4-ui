@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Button, TextField, Stack, Typography } from '@mui/material';
-import { CredentialsTypes } from './sharedInterfaces/sharedInterfaces';
+import { CredentialsTypes } from '../sharedInterfaces/sharedInterfaces';
 
 interface PropsType {
     credentials: Array<CredentialsTypes>
@@ -50,6 +50,9 @@ const EditCard: React.FC<PropsType> = (props): React.ReactElement => {
                 component="form"
                 onSubmit={save}
                 ref={formRef}
+                sx={{
+                    maxWidth: 350
+                }}
             >
 
                 <Typography>

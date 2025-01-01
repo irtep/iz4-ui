@@ -1,4 +1,4 @@
-import { Box, Container } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Iz4Provider } from './context/iz4context';
@@ -13,7 +13,7 @@ const App: React.FC = (): React.ReactElement => {
 
   return (
     <Box sx={{
-      display: 'flex',
+      /*display: 'flex',*/
       flexDirection: 'column',
       width: "100vw",
       height: "100vh",
