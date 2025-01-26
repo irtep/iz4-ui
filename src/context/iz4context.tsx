@@ -81,8 +81,9 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
       }
 
       // if test account, do not add to database
+      // test with POST
       if (testAccount &&
-        (method === "POST" || method === "PUT") &&
+        (method === "POST") &&
         isCredentialsTypes(credentials)
       ) {
         setApiData({
@@ -97,8 +98,8 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
         setTimeout(() => {
           setMessage('')
         }, 3000);
-      } 
-      // if test account, do not add to database
+      }
+      // test with DELETE
       else if (testAccount && method === "DELETE") {
         setApiData({
           ...apiData,
@@ -108,6 +109,29 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
           fetchReady: true
         });
         setMessage('Tunnukset poistettu (väliaikasesti, koska käytät testitunnuksia)!');
+        setTimeout(() => {
+          setMessage('')
+        }, 3000);
+      }
+      // test with PUT
+      else if (testAccount &&
+        (method === "PUT") &&
+        isCredentialsTypes(credentials)
+      ) {
+        setApiData({
+          ...apiData,
+          allCredentials: [
+            ...apiData.allCredentials.map((oldCreds) => {
+              if (oldCreds.id === id) {
+                return credentials;
+              } else {
+                return oldCreds;
+              }
+            })
+          ],
+          fetchReady: true
+        });
+        setMessage('Muutokset tallennettu (väliaikasesti, koska käytät testitunnuksia)!');
         setTimeout(() => {
           setMessage('')
         }, 3000);
