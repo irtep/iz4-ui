@@ -30,8 +30,8 @@ const Header: React.FC = (): React.ReactElement => {
             <Container>
                 { // if message, show it here:
                     (message !== '')
-                    ? <Alert severity="error">{message}</Alert>
-                    : <></>
+                        ? <Alert severity="error">{message}</Alert>
+                        : <></>
                 }
             </Container>
         </Container>

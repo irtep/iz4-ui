@@ -5,7 +5,9 @@ import { Iz4Context } from "../context/iz4context";
 
 interface DetailsOfUser {
     token: string,
-    username: string
+    username: string,
+    admin: boolean,
+    testAccount: boolean
 }
 
 const Login: React.FC = () : React.ReactElement => {
@@ -14,6 +16,8 @@ const Login: React.FC = () : React.ReactElement => {
     const {
         setToken,
         setUsername,
+        setAdmin,
+        setTestAccount,
         modeOfUse
       } = useContext(Iz4Context);
 
@@ -44,15 +48,23 @@ const Login: React.FC = () : React.ReactElement => {
 
                 if (connection.status === 200) {
 
-                    let {token} = await connection.json();
+                    //let {token} = await connection.json();
+                    let response = await connection.json();
+                    console.log('resp: ', response);
 
-                    setToken(token);
+                    setToken(response.token);
                     setUsername(lomakeRef.current?.username.value);
+                    setAdmin(response.admin);
+                    setTestAccount(response.testAccount);
 
-                    const userDetails: DetailsOfUser = {token: token, username: lomakeRef.current?.username.value}
+                    const userDetails: DetailsOfUser = {
+                        token: response.token,
+                        username: lomakeRef.current?.username.value,
+                        admin: response.admin,
+                        testAccount: response.testAccount
+                    }
 
                     localStorage.setItem("uDetails", JSON.stringify(userDetails));
-
                     navigate("/");
 
                 } else if (connection.status === 401) {
@@ -62,7 +74,6 @@ const Login: React.FC = () : React.ReactElement => {
                     setMsg(`Tarkista, onko palvelin päällä. Virhekoodi: ${connection.status}`);
                     setTimeout( () => { setMsg('')}, 10000);                    
                 }
-
             } 
         } 
     };
