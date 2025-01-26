@@ -16,8 +16,9 @@ const OwnSettings: React.FC = (): React.ReactElement => {
     const {
         username,
         token,
-        apiCall
-      } = useContext(Iz4Context);
+        apiCall,
+        testAccount
+    } = useContext(Iz4Context);
 
     const navigate = useNavigate();
     const formRef: any = useRef<HTMLFormElement>();
@@ -35,10 +36,10 @@ const OwnSettings: React.FC = (): React.ReactElement => {
         if (formRef.current?.oldPassword.value.length < 2) { setErrors({ ...errors, oldPassword: 'vähintään 2 merkkiä vaaditaan' }) }
         else if (formRef.current?.newPassword1.value.length < 2) { setErrors({ ...errors, newPassword1: 'vähintään 2 merkkiä vaaditaan' }) }
         else if (formRef.current?.newPassword2.value.length < 2) { setErrors({ ...errors, newPassword2: 'vähintään 2 merkkiä vaaditaan' }) }
-        
+
         // if minimum character requirements are met, then continues:
         else {
-    
+
             // check that new and old password all same
             if (formRef.current?.newPassword1.value === formRef.current?.newPassword2.value) {
                 const payload = {
@@ -53,16 +54,16 @@ const OwnSettings: React.FC = (): React.ReactElement => {
             } else {
                 setMsg('uudet salasanat eivät täsmää.');
             }
-    
+
         }
-    
+
         // remove possible errors after few seconds
         setTimeout(() => {
-          setErrors({
-            oldPassword: '',
-            newPassword1: '',
-            newPassword2: ''
-          });
+            setErrors({
+                oldPassword: '',
+                newPassword1: '',
+                newPassword2: ''
+            });
         }, 3000);
     }
 
@@ -70,9 +71,17 @@ const OwnSettings: React.FC = (): React.ReactElement => {
         return (
             <Container>
 
-                <Typography>
-                    Moi {username}! Jos haluat vaihtaa salasanaa, niin kirjoita alla oleviin kenttiin pyydetyt tiedot
-                </Typography>
+                {
+                    testAccount
+                        ?
+                        <Typography>
+                            Käytät testitiliä. Tämän salasanaa et voi vaihtaa.
+                        </Typography>
+                        :
+                        <Typography>
+                            Moi {username}! Jos haluat vaihtaa salasanaa, niin kirjoita alla oleviin kenttiin pyydetyt tiedot
+                        </Typography>
+                }
 
                 <Stack
                     spacing={1}
@@ -109,10 +118,15 @@ const OwnSettings: React.FC = (): React.ReactElement => {
                         helperText={errors.newPassword2}
                     />
 
-                    <Button
-                        variant="contained"
-                        type="submit"
-                    >Vaihda</Button>
+                    {
+                        !testAccount
+                        ?
+                        <Button
+                            variant="contained"
+                            type="submit"
+                        >Vaihda</Button>
+                        : <></>                        
+                    }   
 
                     <Button
                         variant="outlined"

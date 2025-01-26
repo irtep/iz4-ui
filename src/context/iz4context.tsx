@@ -11,6 +11,8 @@ interface Props {
 export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement => {
   const [token, setToken] = useState<string>(String(''));
   const [username, setUsername] = useState<string>(String(''));
+  const [admin, setAdmin] = useState<boolean>(false);
+  const [testAccount, setTestAccount] = useState<boolean>(false);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
   const [apiData, setApiData] = useState<ApiData>({
@@ -111,8 +113,11 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
 
         switch (connection.status) {
           case 401: 
-            errorText = "Ei lupaa tietoihin / toimenpiteeseen."; 
-            logUserOut();
+            errorText = "Ei lupaa tietoihin / toimenpiteeseen.";
+            if (!isUsersPasswordChange) {
+              // if this is not password change fail, log user out
+              logUserOut();
+            }
             break;
           case 400: errorText = "Virhe pyynnön tiedoissa"; break;
           default: errorText = "Palvelimella tapahtui odottamaton virhe"; break;
@@ -159,6 +164,8 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
       const user = JSON.parse(loggedUserJSON);
       setToken(user.token);
       setUsername(user.username);
+      setAdmin(user.admin);
+      setTestAccount(user.testAccount);
       // fetches users saved credentials
       apiCall(undefined, undefined, user.token);
     }
@@ -180,7 +187,9 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
       apiCall,
       modeOfUse,
       logUserOut,
-      isMobile
+      isMobile,
+      admin, setAdmin,
+      testAccount, setTestAccount
     }}>
       {props.children}
     </Iz4Context.Provider>
