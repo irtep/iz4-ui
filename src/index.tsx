@@ -23,7 +23,7 @@ root.render(
        * <BrowserRouter basename="/iz4">
        */
     }
-    <BrowserRouter>
+    <BrowserRouter basename="/iz4">
       <App />
     </BrowserRouter>
   </React.StrictMode>

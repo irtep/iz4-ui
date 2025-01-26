@@ -22,7 +22,7 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
   });
   const isMobile: boolean = useIsMobile();
   // Change this to match 'prod' or 'dev' depending, what you need
-  const modeOfUse: String = 'dev';
+  const modeOfUse: String = 'prod';
 
   const apiCall = async (
     method?: string,
@@ -75,67 +75,105 @@ export const Iz4Provider: React.FC<Props> = (props: Props): React.ReactElement =
 
     try {
       let chosenUrl = (modeOfUse === 'dev') ? devUrl : prodUrl;
-      const connection: Response = await fetch(chosenUrl, settings);
 
-      if (connection.status === 200) {
-        if (isUsersPasswordChange) {
+      const isCredentialsTypes = (obj: any): obj is CredentialsTypes => {
+        return typeof obj.username === "string" && typeof obj.password === "string";
+      }
 
-          setMessage('Salasanasi on vaihdettu!');
-          setApiData({
-            ...apiData,
-            fetchReady: true
-          });
+      // if test account, do not add to database
+      if (testAccount &&
+        (method === "POST" || method === "PUT") &&
+        isCredentialsTypes(credentials)
+      ) {
+        setApiData({
+          ...apiData,
+          allCredentials: [
+            ...apiData.allCredentials,
+            credentials
+          ],
+          fetchReady: true
+        });
+        setMessage('Tunnukset tallennettu (väliaikasesti, koska käytät testitunnuksia)!');
+        setTimeout(() => {
+          setMessage('')
+        }, 3000);
+      } 
+      // if test account, do not add to database
+      else if (testAccount && method === "DELETE") {
+        setApiData({
+          ...apiData,
+          allCredentials: [
+            ...apiData.allCredentials.filter(credential => credential.id !== id)
+          ],
+          fetchReady: true
+        });
+        setMessage('Tunnukset poistettu (väliaikasesti, koska käytät testitunnuksia)!');
+        setTimeout(() => {
+          setMessage('')
+        }, 3000);
+      }
+      // non test account
+      else {
+        const connection: Response = await fetch(chosenUrl, settings);
 
-          setTimeout(() => {
-            setMessage('')
-          }, 3000);
+        if (connection.status === 200) {
+          if (isUsersPasswordChange) {
 
-        } else {
+            setMessage('Salasanasi on vaihdettu!');
+            setApiData({
+              ...apiData,
+              fetchReady: true
+            });
 
-          setApiData({
-            ...apiData,
-            allCredentials: await connection.json(),
-            fetchReady: true
-          });
-
-          // if it was POST or PUT, confirm, that credentials are now saved
-          if (method === 'POST' || method === 'PUT') {
-
-            setMessage('Tunnukset tallennettu!');
             setTimeout(() => {
               setMessage('')
             }, 3000);
-          }
-        }
-      } else {
 
-        let errorText: string = "";
+          } else {
+            setApiData({
+              ...apiData,
+              allCredentials: await connection.json(),
+              fetchReady: true
+            });
 
-        switch (connection.status) {
-          case 401: 
-            errorText = "Ei lupaa tietoihin / toimenpiteeseen.";
-            if (!isUsersPasswordChange) {
-              // if this is not password change fail, log user out
-              logUserOut();
+            // if it was POST or PUT, confirm, that credentials are now saved
+            if (method === 'POST' || method === 'PUT') {
+
+              setMessage('Tunnukset tallennettu!');
+              setTimeout(() => {
+                setMessage('')
+              }, 3000);
             }
-            break;
-          case 400: errorText = "Virhe pyynnön tiedoissa"; break;
-          default: errorText = "Palvelimella tapahtui odottamaton virhe"; break;
-        }
+          }
+        } else {
 
-        setApiData({
-          ...apiData,
-          error: errorText,
-          fetchReady: true
-        });
-        setTimeout(() => {
+          let errorText: string = "";
+
+          switch (connection.status) {
+            case 401:
+              errorText = "Ei lupaa tietoihin / toimenpiteeseen.";
+              if (!isUsersPasswordChange) {
+                // if this is not password change fail, log user out
+                logUserOut();
+              }
+              break;
+            case 400: errorText = "Virhe pyynnön tiedoissa"; break;
+            default: errorText = "Palvelimella tapahtui odottamaton virhe"; break;
+          }
+
           setApiData({
             ...apiData,
-            error: ''
+            error: errorText,
+            fetchReady: true
           });
-        }, 3000);
+          setTimeout(() => {
+            setApiData({
+              ...apiData,
+              error: ''
+            });
+          }, 3000);
+        }
       }
-
     } catch (e: any) {
       setApiData({
         ...apiData,
